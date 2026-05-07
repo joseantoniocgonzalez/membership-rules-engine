@@ -23,10 +23,10 @@ class StoreDiscountServiceTest {
     @BeforeEach
     void setUp() {
         Map<String, Member> members = Map.of(
-                "BHFC-1001", new Member("BHFC-1001", "111111", MembershipType.SEASON_TICKET_HOLDER, true),
-                "BHFC-2045", new Member("BHFC-2045", "482910", MembershipType.PREMIUM_MEMBER, true),
-                "BHFC-3107", new Member("BHFC-3107", "739204", MembershipType.STANDARD_MEMBER, true),
-                "BHFC-4880", new Member("BHFC-4880", "105377", MembershipType.FREE_MEMBER, true)
+                "BHFC-1001", new Member("BHFC-1001", "111111", MembershipType.SEASON_TICKET_HOLDER, true, java.time.LocalDate.of(2015, 6, 1)),
+                "BHFC-2045", new Member("BHFC-2045", "482910", MembershipType.PREMIUM_MEMBER, true, java.time.LocalDate.of(2021, 7, 14)),
+                "BHFC-3107", new Member("BHFC-3107", "739204", MembershipType.STANDARD_MEMBER, true, java.time.LocalDate.of(2023, 2, 10)),
+                "BHFC-4880", new Member("BHFC-4880", "105377", MembershipType.FREE_MEMBER, true, java.time.LocalDate.of(2024, 9, 3))
         );
 
         MemberDirectory memberDirectory = memberNumber -> Optional.ofNullable(members.get(memberNumber));
