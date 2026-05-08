@@ -2,7 +2,7 @@
 
 Membership Rules Engine is a Java and Spring Boot backend project that models membership-based business rules for a fictional English football club: Bristol Harbour FC.
 
-The project focuses on rule validation, ticket eligibility, store discounts, ticket sale windows and Promotion Final ticket allocation.
+The project focuses on member validation, store discounts, normal match ticket sale windows and Promotion Final ticket allocation.
 
 ## Business context
 
@@ -13,10 +13,10 @@ Bristol Harbour FC manages different membership types with different rights and 
 - Standard Members
 - Free Members
 
-The system models rules for:
+The backend models rules for:
 
 - official club store discounts;
-- normal match ticket sale windows;
+- normal home match ticket sale windows;
 - included access for Season Ticket Holders;
 - Promotion Final ticket allocation at Wembley Stadium;
 - waiting list promotion after cancellations.
@@ -25,16 +25,18 @@ The Promotion Final is played between Bristol Harbour FC and Birmingham Forge FC
 
 ## Technical focus
 
-This project is designed to demonstrate:
+This project demonstrates:
 
 - backend development with Java and Spring Boot;
-- business rule modelling;
 - REST API design;
-- validation of member credentials;
-- unit and parameterized testing;
-- integration testing with PostgreSQL and Testcontainers;
+- business rule modelling;
+- member credential validation;
+- PostgreSQL persistence with JPA;
 - database migrations with Flyway;
+- unit and parameterized testing with JUnit 5;
+- integration testing with Testcontainers;
 - CI execution with GitHub Actions;
+- test coverage reporting with JaCoCo;
 - technical documentation for a portfolio project.
 
 ## Stack
@@ -46,29 +48,224 @@ This project is designed to demonstrate:
 - Flyway
 - Spring Data JPA
 - JUnit 5
+- AssertJ
 - Testcontainers
 - JaCoCo
 - GitHub Actions
 
-## Rule summary
+## Main rules
 
 Every member operation that depends on membership type must validate both:
 
-- memberNumber
-- accessCode
+- `memberNumber`
+- `accessCode`
 
-If the member number does not exist or the access code does not match, the operation returns INVALID_MEMBER_ACCESS.
+If the member number does not exist or the access code does not match, the operation returns:
 
-This validation is intentionally kept separate from full authentication. The project does not use Spring Security, JWT or session-based login for this version.
+```text
+INVALID_MEMBER_ACCESS
+```
 
-## Running the project checks
+This validation is intentionally kept separate from full authentication. The project does not use Spring Security, JWT or session-based login in this version.
 
-Run the test suite with:
+## Implemented features
 
-    ./mvnw test
+### Store discounts
+
+Store discounts apply only to the official club store.
+
+| Membership type | Discount |
+| --- | ---: |
+| `SEASON_TICKET_HOLDER` | 20% |
+| `PREMIUM_MEMBER` | 20% |
+| `STANDARD_MEMBER` | 10% |
+| `FREE_MEMBER` | 0% |
+
+Example:
+
+| Field | Value |
+| --- | --- |
+| Product | Home Shirt |
+| Base price | £75 |
+| Member number | BHFC-2045 |
+| Access code | 482910 |
+| Membership type | `PREMIUM_MEMBER` |
+| Discount | 20% |
+| Final price | £60 |
+
+Endpoint:
+
+```text
+POST /api/store/discounts
+```
+
+### Normal match ticket sale windows
+
+Normal home match:
+
+```text
+Bristol Harbour FC vs Northampton Cobblers FC
+```
+
+Implemented outcomes:
+
+- `ALREADY_INCLUDED`
+- `CONFIRMED`
+- `NOT_YET_AVAILABLE`
+- `SOLD_OUT`
+- `DUPLICATE_REQUEST`
+- `REJECTED`
+- `INVALID_MEMBER_ACCESS`
+
+Endpoint:
+
+```text
+POST /api/tickets/normal-match/purchases
+```
+
+### Promotion Final ticket allocation
+
+Final:
+
+```text
+Bristol Harbour FC vs Birmingham Forge FC
+Promotion Final
+Wembley Stadium, London
+```
+
+Rules:
+
+- only active Season Ticket Holders are eligible;
+- tickets are assigned by season ticket seniority;
+- seniority is based on `memberSince`;
+- the allocation is limited to 35,000 tickets;
+- eligible members outside the allocation are placed on the waiting list;
+- duplicate requests are rejected;
+- inactive members are rejected;
+- cancelled confirmed tickets can promote the first waiting list member by seniority.
+
+Implemented outcomes:
+
+- `CONFIRMED`
+- `WAITING_LIST`
+- `REJECTED`
+- `NOT_ELIGIBLE`
+- `DUPLICATE_REQUEST`
+- `CANCELLED`
+- `INVALID_MEMBER_ACCESS`
+
+Endpoints:
+
+```text
+POST /api/final-tickets/requests
+POST /api/final-tickets/cancellations
+```
+
+## Persistence
+
+The project uses PostgreSQL with Flyway migrations.
+
+Current migrations:
+
+| Migration | Purpose |
+| --- | --- |
+| `V1__create_members_table.sql` | Creates the `members` table |
+| `V2__insert_demo_members.sql` | Inserts fictional demo members |
+
+Member data is loaded through Spring Data JPA using:
+
+- `MemberEntity`
+- `MemberJpaRepository`
+- `JpaMemberDirectory`
+
+## Testing
+
+The project includes unit, parameterized and integration tests.
+
+Current test areas:
+
+- store discount rules;
+- member credential validation;
+- normal match ticket sale windows;
+- duplicate ticket purchase prevention;
+- Promotion Final eligibility;
+- Promotion Final allocation by seniority;
+- waiting list promotion after cancellation;
+- JPA member lookup from PostgreSQL;
+- business rules using PostgreSQL-backed data.
+
+Integration tests use Testcontainers to run a real PostgreSQL database during the test suite.
+
+Run tests:
+
+```bash
+./mvnw test
+```
+
+Run full verification with JaCoCo coverage:
+
+```bash
+./mvnw verify
+```
+
+The JaCoCo report is generated at:
+
+```text
+target/site/jacoco/index.html
+```
+
+## Continuous Integration
+
+GitHub Actions runs the verification pipeline on:
+
+- pushes to `main`;
+- pull requests targeting `main`.
+
+The CI workflow executes:
+
+```bash
+./mvnw --batch-mode verify
+```
+
+This runs the automated test suite and generates the JaCoCo coverage report.
+
+## Documentation
+
+Additional technical documentation is available in the `docs/` directory:
+
+- `docs/business-rules.md`
+- `docs/decision-table.md`
+- `docs/test-strategy.md`
+
+## Project structure
+
+```text
+src/main/java/com/jose/membershiprules
+├── domain
+├── finalallocation
+├── member
+├── store
+└── ticket
+
+src/main/resources/db/migration
+├── V1__create_members_table.sql
+└── V2__insert_demo_members.sql
+
+src/test/java/com/jose/membershiprules
+├── BusinessRulesIntegrationTest.java
+├── MemberDirectoryIntegrationTest.java
+├── finalallocation
+├── store
+└── ticket
+
+docs
+├── business-rules.md
+├── decision-table.md
+└── test-strategy.md
+```
 
 ## Project identity
 
-All club names, rivals, products and membership scenarios are fictional.
+All club names, rivals, products, members and membership scenarios are fictional.
 
 Wembley Stadium is used as a real-world venue to give the Promotion Final a realistic context.
