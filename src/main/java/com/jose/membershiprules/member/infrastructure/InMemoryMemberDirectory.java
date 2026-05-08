@@ -3,13 +3,11 @@ package com.jose.membershiprules.member.infrastructure;
 import com.jose.membershiprules.domain.MembershipType;
 import com.jose.membershiprules.member.Member;
 import com.jose.membershiprules.member.MemberDirectory;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class InMemoryMemberDirectory implements MemberDirectory {
 
     private final Map<String, Member> members = Map.ofEntries(
