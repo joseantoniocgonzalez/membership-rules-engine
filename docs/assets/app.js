@@ -203,7 +203,6 @@ function resetFinalDemo() {
     finalApplications.clear();
 
     [
-        ["BHFC-12000", members["BHFC-12000"]],
         ["BHFC-1001", members["BHFC-1001"]],
         ["BHFC-18050", members["BHFC-18050"]],
         ["BHFC-27000", members["BHFC-27000"]],
@@ -279,6 +278,7 @@ function loadDemo(type) {
             ]);
         },
         "final-confirmed": () => {
+            resetFinalDemo();
             document.getElementById("final-member").value = "BHFC-12000";
             document.getElementById("final-code").value = "120000";
             requestFinalTicket();
