@@ -4,6 +4,44 @@ Membership Rules Engine is a Java and Spring Boot backend project that models me
 
 The project focuses on member validation, store discounts, normal match ticket sale windows and Promotion Final ticket allocation.
 
+## Live demo
+
+[![Live demo](https://img.shields.io/badge/Live%20demo-GitHub%20Pages-0f4c81?style=for-the-badge)](https://joseantoniocgonzalez.github.io/membership-rules-engine/)
+[![CI](https://img.shields.io/github/actions/workflow/status/joseantoniocgonzalez/membership-rules-engine/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/joseantoniocgonzalez/membership-rules-engine/actions)
+[![Java](https://img.shields.io/badge/Java-21-d7a84b?style=for-the-badge)](#stack)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-backend-081826?style=for-the-badge)](#stack)
+
+A static GitHub Pages demo is available here:
+
+**https://joseantoniocgonzalez.github.io/membership-rules-engine/**
+
+The demo is a visual companion to the backend. It allows visitors to understand the main rules without running the Spring Boot application locally:
+
+- store discounts by membership type;
+- normal match ticket sale windows;
+- Promotion Final allocation and waiting list behavior;
+- demo member records for manual testing.
+
+## Quick links
+
+| Resource | Link |
+| --- | --- |
+| Live demo | https://joseantoniocgonzalez.github.io/membership-rules-engine/ |
+| Business rules | `docs/business-rules.md` |
+| Decision table | `docs/decision-table.md` |
+| Test strategy | `docs/test-strategy.md` |
+| GitHub Actions workflow | `.github/workflows/ci.yml` |
+
+## Highlights
+
+- REST API for membership-based business rules.
+- PostgreSQL persistence with Flyway migrations.
+- Unit, parameterized and integration tests.
+- Testcontainers-backed PostgreSQL integration tests.
+- GitHub Actions CI pipeline running `./mvnw --batch-mode verify`.
+- JaCoCo coverage report generated during Maven `verify`.
+- Static GitHub Pages demo for non-technical review.
+
 ## Business context
 
 Bristol Harbour FC manages different membership types with different rights and restrictions:
@@ -259,8 +297,14 @@ src/test/java/com/jose/membershiprules
 └── ticket
 
 docs
+├── assets
+│   ├── app.js
+│   ├── bhfc-crest.png
+│   ├── bhfc-home-shirt.png
+│   └── styles.css
 ├── business-rules.md
 ├── decision-table.md
+├── index.html
 └── test-strategy.md
 ```
 
