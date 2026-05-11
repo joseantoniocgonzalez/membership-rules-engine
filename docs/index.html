@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Rules Engine Demo</title>
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="badge image-badge">
+            <img src="assets/bhfc-crest.png" alt="Bristol Harbour FC crest">
+        </div>
+
+        <div class="hero-content">
+            <p class="eyebrow">Bristol Harbour FC</p>
+            <h1>Membership Rules Engine</h1>
+            <p>
+                A static visual simulation of the business rules implemented in the Spring Boot backend:
+                store discounts, ticket sale windows and Promotion Final allocation.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="card intro">
+            <p class="eyebrow">Visual companion</p>
+            <h2>What this demo represents</h2>
+            <p>
+                This GitHub Pages demo helps visitors understand the rules implemented in the backend
+                without running the Spring Boot application locally.
+            </p>
+        </section>
+
+        <section class="grid">
+            <article class="card store-card">
+                <p class="eyebrow">Official club store</p>
+                <h2>Home Shirt</h2>
+
+                <div class="shirt shirt-image" aria-label="Bristol Harbour FC home shirt">
+                    <img src="assets/bhfc-home-shirt.png" alt="Bristol Harbour FC navy home shirt">
+                </div>
+
+                <p class="price">£75</p>
+                <p class="muted">
+                    Navy home shirt with a charcoal cross and gold detailing.
+                </p>
+            </article>
+
+            <article class="card">
+                <p class="eyebrow">Store discounts</p>
+                <h2>Discount simulator</h2>
+
+                <label for="store-member">Member number</label>
+                <input id="store-member" value="BHFC-2045">
+
+                <label for="store-code">Access code</label>
+                <input id="store-code" value="482910">
+
+                <label for="store-price">Base price (£)</label>
+                <input id="store-price" type="number" value="75" readonly>
+
+                <div class="quick-actions">
+                    <button type="button" data-demo="store-premium">BHFC-2045 · 482910 · Premium</button>
+                    <button type="button" data-demo="store-standard">BHFC-3107 · 739204 · Standard</button>
+                    <button type="button" data-demo="store-invalid">BHFC-2045 · 000000 · Invalid</button>
+                </div>
+
+                <button id="calculate-discount">Calculate discount</button>
+
+                <div class="result" id="store-result">
+                    Run the simulator to see the discount result.
+                </div>
+            </article>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <p class="eyebrow">Normal home match</p>
+                <h2>Ticket sale windows</h2>
+                <p>Bristol Harbour FC vs Northampton Cobblers FC</p>
+
+                <label for="ticket-member">Member number</label>
+                <input id="ticket-member" value="BHFC-3107">
+
+                <label for="ticket-code">Access code</label>
+                <input id="ticket-code" value="739204">
+
+                <label for="ticket-date">Request date</label>
+                <input id="ticket-date" type="date" value="2026-07-02">
+
+                <div class="quick-actions">
+                    <button type="button" data-demo="ticket-season">BHFC-1001 · 111111 · Included</button>
+                    <button type="button" data-demo="ticket-standard-early">BHFC-3107 · 739204 · Early</button>
+                    <button type="button" data-demo="ticket-sold-out">Sold out example</button>
+                </div>
+
+                <button id="request-ticket">Request ticket</button>
+
+                <div class="result" id="ticket-result">
+                    Run the simulator to check the sale window rule.
+                </div>
+            </article>
+
+            <article class="card">
+                <p class="eyebrow">Promotion Final</p>
+                <h2>Wembley allocation</h2>
+                <p>Bristol Harbour FC vs Birmingham Forge FC</p>
+                <p class="muted">Wembley Stadium, London · 35,000 tickets</p>
+
+                <label for="final-member">Member number</label>
+                <input id="final-member" value="BHFC-36035">
+
+                <label for="final-code">Access code</label>
+                <input id="final-code" value="360350">
+
+                <div class="quick-actions">
+                    <button type="button" data-demo="final-confirmed">BHFC-12000 · 120000 · Confirmed</button>
+                    <button type="button" data-demo="final-waiting">BHFC-36035 · 360350 · Waiting</button>
+                    <button type="button" data-demo="final-not-eligible">BHFC-2045 · 482910 · Not eligible</button>
+                    <button type="button" data-demo="final-inactive">BHFC-1900 · 190000 · Inactive</button>
+                </div>
+
+                <button id="run-final-rule">Run final rule</button>
+                <button id="reset-final-demo" class="secondary-button" type="button">Reset final demo</button>
+
+                <div class="result" id="final-result">
+                    Run the simulator to check final allocation rules.
+                </div>
+            </article>
+        </section>
+
+        <section class="card allocation-panel">
+            <p class="eyebrow">Promotion Final sample</p>
+            <h2>Reduced allocation view</h2>
+            <p class="muted">
+                The backend rule uses 35,000 tickets. This visual demo uses a reduced allocation of 3 tickets
+                so the confirmed and waiting list behavior is easy to see.
+            </p>
+
+            <div class="allocation-columns">
+                <div>
+                    <h3>Confirmed</h3>
+                    <ul id="confirmed-list"></ul>
+                </div>
+                <div>
+                    <h3>Waiting list</h3>
+                    <ul id="waiting-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <p class="eyebrow">Try these examples</p>
+            <h2>Test scenarios</h2>
+            <p class="muted">
+                Use the buttons in each simulator to load these examples automatically.
+            </p>
+            <div class="scenarios">
+                <div><strong>Store discount</strong><span>Premium member receives 20% discount.</span></div>
+                <div><strong>Invalid access</strong><span>Wrong access code returns INVALID_MEMBER_ACCESS.</span></div>
+                <div><strong>Ticket window</strong><span>Standard member before sale window returns NOT_YET_AVAILABLE.</span></div>
+                <div><strong>Promotion Final</strong><span>Season Ticket Holders are assigned by seniority.</span></div>
+            </div>
+        </section>
+
+        <section class="card demo-records">
+            <p class="eyebrow">Manual testing data</p>
+            <h2>Demo member records</h2>
+            <p class="muted">
+                These fictional records mirror the seed data loaded by Flyway in the backend.
+                Use them to test the simulators manually or through the quick scenario buttons.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Member number</th>
+                            <th>Access code</th>
+                            <th>Type</th>
+                            <th>Active</th>
+                            <th>Useful for</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>BHFC-12000</code></td>
+                            <td><code>120000</code></td>
+                            <td><code>SEASON_TICKET_HOLDER</code></td>
+                            <td>Yes</td>
+                            <td>Promotion Final confirmed example</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-1001</code></td>
+                            <td><code>111111</code></td>
+                            <td><code>SEASON_TICKET_HOLDER</code></td>
+                            <td>Yes</td>
+                            <td>Normal match already included</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-18050</code></td>
+                            <td><code>180500</code></td>
+                            <td><code>SEASON_TICKET_HOLDER</code></td>
+                            <td>Yes</td>
+                            <td>Promotion Final seniority example</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-27000</code></td>
+                            <td><code>270000</code></td>
+                            <td><code>SEASON_TICKET_HOLDER</code></td>
+                            <td>Yes</td>
+                            <td>Waiting list sample</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-36035</code></td>
+                            <td><code>360350</code></td>
+                            <td><code>SEASON_TICKET_HOLDER</code></td>
+                            <td>Yes</td>
+                            <td>Waiting list / high member number example</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-1900</code></td>
+                            <td><code>190000</code></td>
+                            <td><code>SEASON_TICKET_HOLDER</code></td>
+                            <td>No</td>
+                            <td>Inactive member rejection</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-2045</code></td>
+                            <td><code>482910</code></td>
+                            <td><code>PREMIUM_MEMBER</code></td>
+                            <td>Yes</td>
+                            <td>20% store discount / final not eligible</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-3107</code></td>
+                            <td><code>739204</code></td>
+                            <td><code>STANDARD_MEMBER</code></td>
+                            <td>Yes</td>
+                            <td>10% discount / ticket window example</td>
+                        </tr>
+                        <tr>
+                            <td><code>BHFC-4880</code></td>
+                            <td><code>105377</code></td>
+                            <td><code>FREE_MEMBER</code></td>
+                            <td>Yes</td>
+                            <td>0% discount / final sale window example</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Fictional club and membership data. Built as a visual companion to the Spring Boot backend.</p>
+    </footer>
+
+    <script src="assets/app.js"></script>
+</body>
+</html>
