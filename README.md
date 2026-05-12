@@ -30,6 +30,7 @@ The demo is a visual companion to the backend. It allows visitors to understand 
 | Business rules | `docs/business-rules.md` |
 | Decision table | `docs/decision-table.md` |
 | Test strategy | `docs/test-strategy.md` |
+| API examples | `docs/api-examples.md` |
 | GitHub Actions workflow | `.github/workflows/ci.yml` |
 
 ## Highlights
@@ -274,6 +275,7 @@ Additional technical documentation is available in the `docs/` directory:
 - `docs/business-rules.md`
 - `docs/decision-table.md`
 - `docs/test-strategy.md`
+- `docs/api-examples.md`
 
 ## Project structure
 
@@ -302,6 +304,7 @@ docs
 │   ├── bhfc-crest.png
 │   ├── bhfc-home-shirt.png
 │   └── styles.css
+├── api-examples.md
 ├── business-rules.md
 ├── decision-table.md
 ├── index.html
